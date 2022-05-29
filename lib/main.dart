@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebaseseries/firebase_options.dart';
@@ -11,6 +14,25 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform
   );
+
+
+  // FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  // DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection("users").doc("Z3kfNrbsVBlgqPnP94S2").get();
+  // log(snapshot.data().toString());
+
+  // Map<String, dynamic> newUserData = {
+  //   "name": "SlantCode",
+  //   "email": "slantcode@gmail.com"
+  // };
+  // await _firestore.collection("users").doc("your-id-here").update({
+  //   "email": "slantcode2@gmail.com"
+  // });
+  // log("User updated!");
+
+  // await _firestore.collection("users").doc("Z3kfNrbsVBlgqPnP94S2").delete();
+  // log("User deleted!");
+
   runApp(MyApp());
 }
 
