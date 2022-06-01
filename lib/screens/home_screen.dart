@@ -18,6 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  TextEditingController ageController = TextEditingController();
 
   void logOut() async {
     await FirebaseAuth.instance.signOut();
@@ -30,14 +31,20 @@ class _HomeScreenState extends State<HomeScreen> {
   void saveUser() {
     String name = nameController.text.trim();
     String email = emailController.text.trim();
+    String ageString = ageController.text.trim();
+
+    int age = int.parse(ageString);
     
     nameController.clear();
     emailController.clear();
+    ageController.clear();
 
     if(name != "" && email != "") {
       Map<String, dynamic> userData = {
         "name": name,
-        "email": email
+        "email": email,
+        "age": age,
+        "samplearray": [name, email, age]
       };
       FirebaseFirestore.instance.collection("users").add(userData);
       log("User created!");
@@ -85,6 +92,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
               SizedBox(height: 10,),
 
+              TextField(
+                controller: ageController,
+                decoration: InputDecoration(
+                  hintText: "Age"
+                ),
+              ),
+
+              SizedBox(height: 10,),
+
               CupertinoButton(
                 onPressed: () {
                   saveUser();
@@ -95,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: 20,),
 
               StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance.collection("users").snapshots(),
+                stream: FirebaseFirestore.instance.collection("users").where("age", isGreaterThanOrEqualTo: 19).orderBy("age", descending: true).snapshots(),
                 builder: (context, snapshot) {
 
                   if(snapshot.connectionState == ConnectionState.active) {
@@ -108,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Map<String, dynamic> userMap = snapshot.data!.docs[index].data() as Map<String, dynamic>;
 
                             return ListTile(
-                              title: Text(userMap["name"]),
+                              title: Text(userMap["name"] + " (${userMap["age"]})"),
                               subtitle: Text(userMap["email"]),
                               trailing: IconButton(
                                 onPressed: () {
